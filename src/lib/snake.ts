@@ -28,20 +28,34 @@ export class Snake implements GameObject {
     }
 
     onKeyPress(key: string) {
+        let newVelocity: Vector;
+
         switch (key) {
             case "w":
-                this.velocity = new Vector(0, -1);
+                newVelocity = new Vector(0, -1);
                 break;
             case "s":
-                this.velocity = new Vector(0, 1);
+                newVelocity = new Vector(0, 1);
                 break;
             case "a":
-                this.velocity = new Vector(-1, 0);
+                newVelocity = new Vector(-1, 0);
                 break;
             case "d":
-                this.velocity = new Vector(1, 0);
+                newVelocity = new Vector(1, 0);
                 break;
+            default:
+                return;
         }
+
+        // Check if the new velocity is the opposite of the current velocity
+        if (
+            newVelocity.x === -this.velocity.x ||
+            newVelocity.y === -this.velocity.y
+        ) {
+            return;
+        }
+
+        this.velocity = newVelocity;
     }
 
     update(game: Game): Vector[] {
