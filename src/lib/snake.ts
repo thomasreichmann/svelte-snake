@@ -6,7 +6,7 @@ export class Snake implements GameObject {
     color: string = "green";
     gridSize: Vector;
 
-    length: number = 50;
+    length: number = 4;
     tail: Vector[] = [];
 
     onDeath?: () => void;
