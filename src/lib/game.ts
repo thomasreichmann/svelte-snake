@@ -44,6 +44,7 @@ export class Game {
     grid: (string | null)[][] = [];
     bgColor: string = "black";
 
+    keyPressStack: string[] = [];
     paused: boolean = true;
 
     constructor(canvas: HTMLCanvasElement, bgColor?: string) {
@@ -60,6 +61,9 @@ export class Game {
     }
 
     async gameLoop() {
+        let keyPressed = this.keyPressStack.shift();
+        if (keyPressed) this.handleKeyPress(keyPressed);
+
         if (this.paused) return;
 
         this.tick();
@@ -99,8 +103,6 @@ export class Game {
     }
 
     onKeyPress(key: string) {
-        this.gameObjects.forEach((obj) => obj.onKeyPress?.(key));
-
         // Debug key for manual tick
         if (key === "t") {
             this.tick();
@@ -108,8 +110,14 @@ export class Game {
             this.reset();
         } else if (key === "q") {
             this.paused = !this.paused;
-            this.gameLoop();
+            this.gameLoop().then();
+        } else {
+            this.keyPressStack.push(key);
         }
+    }
+
+    handleKeyPress(key: string) {
+        this.gameObjects.forEach((obj) => obj.onKeyPress?.(key));
     }
 
     tick() {
